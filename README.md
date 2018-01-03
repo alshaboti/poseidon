@@ -231,6 +231,70 @@ This project is licensed under the Apache License - see the [LICENSE.md](LICENSE
 - [Additional Documentation](https://github.com/CyberReboot/poseidon/tree/master/docs)
 
 
+## Test with Faucet
+Follow instructions above and this blog
+- [Poseidon + Faucet](https://blog.cyberreboot.org/building-a-software-defined-network-with-raspberry-pis-and-a-zodiac-fx-switch-97184032cdc1)
+
+### Troubleshooting
+#### FAUCET raspberry pi
+Follow the instruction here after you read notes below: 
+1- make sure ssh account has permessions to change faucet.yaml
+Better to make it root  by 
+#to allow ssh through root
+nano /etc/ssh/sshd_config
+change this line as
+PermitRootLogin yes #without-password
+
+2- if internet conn loss you may need delete fake gateway
+sudo route del default gw OpenWrt.lan
+
+3- For time sync problem run 
+sudo /etc/init.d/ntp stop
+sudo ntpd -q -g
+sudo /etc/init.d/ntp start
+
+#### SERVER
+Follow the same link above. 
+1- To pass env variables to docker containers you need to run docker without root.
+Before installing docker-ce, add current user to docker group
+```
+sudo groupadd docker
+sudo usermod -aG docker $USER
+```
+2- To stop/delete all containers
+```
+docker stop/rm $(docker ps -aq)
+```
+3- Don't forgot to export before run the containers
+```
+#controller var
+export controller_uri=192.168.2.10
+export controller_user=root
+export controller_pass=faucet
+export controller_type=faucet
+export controller_log_file=/var/log/ryu/faucet/faucet.log
+export controller_config_file=/etc/ryu/faucet/faucet.yaml
+
+#collector/mirror
+export collector_nic=enp5s0
+export controller_mirror_ports='{"openwrt":3}'
+export max_concurrent_reinvestigations=1
+```
+4- Build images and run the containers 
+```
+./helper/run
+```
+After done init
+```
+docker logs -f cyberreboot-vent-syslog-master
+```
+
+ 
+
+
+
+
+
 
 
 
