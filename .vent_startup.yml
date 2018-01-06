@@ -33,6 +33,6 @@ https://github.com/cyberreboot/poseidon:
 https://github.com/cyberreboot/vent-plugins:
     pcap_to_node_pcap:
         build: yes
-https://github.com/lab41/poseidonml:
+https://github.com/alshaboti/PoseidonML:
     nodeclassifier@eval:
         build: yes
