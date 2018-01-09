@@ -127,3 +127,19 @@ Once vent is running, you can see log events.
 ```
 docker logs -f cyberreboot-vent-syslog-master
 ```
+## PI Clients 
+- Configure PI 1 network interface as
+```
+auto eth1
+iface eth1 inet static
+    address 192.168.2.1
+```
+
+- Configure PI 2 network interface as
+```
+auto eth1
+iface eth1 inet static
+    address 192.168.2.2
+```
+## Test
+Try to make aggressive pinging between Pis and see how Poseidon detects and block the connection. 
