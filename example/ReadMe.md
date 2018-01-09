@@ -23,6 +23,7 @@ docker run -d \
     -p 9302:9302 \
     faucet/faucet-pi
 ```
+OF-switch should be connected to Faucet by now. check /var/log/ryu/faucet/faucet.log file. 
 - Enable ssh on Faucet PI as in [here](https://www.raspberrypi.org/documentation/remote-access/ssh/). Give pi user permission to change faucet.yaml and log files, such that Poseidon can edit these files later. 
 ```
 sudo chmod auo+w /etc/ryu/faucet/faucet.yaml
@@ -32,7 +33,7 @@ sudo chmod -R auo+w /var/log/ryu/faucet/
 ```
 auto eth0
 iface eth0 inet static
-    address 192.168.1.100
+    address 192.168.1.1
     
 auto eth1
 iface eth1 inet static
