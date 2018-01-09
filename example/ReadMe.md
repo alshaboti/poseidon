@@ -12,12 +12,16 @@ this is example show detailed technical steps that I learned when I followed Cha
 Connect these devices as shown in the figure above.
 ### Faucet PI
 - Install [Docker CE](https://docs.docker.com/engine/installation/linux/docker-ce/debian/) 
-- Build and run faucet container
+- Pull and run faucet container
 ```
-git clone https://github.com/faucetsdn/faucet
-cd faucet
-docker build -f Dockerfile.pi -t faucet/faucet .
-docker run -dit --name faucet-pi --restart unless-stopped faucet/faucet
+docker pull faucet/faucet-pi
+docker run -d \
+    --name faucet \
+    -v /etc/ryu/faucet/:/etc/ryu/faucet/ \
+    -v /var/log/ryu/faucet/:/var/log/ryu/faucet/ \
+    -p 6653:6653 \
+    -p 9302:9302 \
+    faucet/faucet-pi
 ```
 - Enable ssh on Faucet PI as in [here](https://www.raspberrypi.org/documentation/remote-access/ssh/). Give pi user permission to change faucet.yaml and log files, such that Poseidon can edit these files later. 
 ```
@@ -55,43 +59,6 @@ dps:
         native_vlan: demo
       3:
         native_vlan: mirror
-```
-- Config gauge.yaml file
-```
-faucet_configs:
-  - '/etc/ryu/faucet/faucet.yaml'
-watchers:
-  port_status_poller:
-    type: ‘port_state'
-    dps: ['openwrt']
-    db: 'influx'
-  port_stats_poller:
-    type: 'port_stats'
-    dps: ['openwrt']
-    interval: 10
-    db: 'prometheus'
-  flow_table_poller:
-    type: 'flow_table'
-    interval: 60
-    dps: ['openwrt']
-    db: 'influx'
-dbs:
-  ft_file:
-    type: 'text'
-    compress: True
-    file: 'flow_table.yaml.gz'
-  prometheus:
-    type: 'prometheus'
-    prometheus_addr: '0.0.0.0'
-    prometheus_port: 9303
-  influx:
-    type: 'influx'
-    influx_db: 'faucet'
-    influx_host: 'influxdb'
-    influx_port: 8086
-    influx_user: 'faucet'
-    influx_pwd: 'faucet'
-    influx_timeout: 10
 ```
 ## Poseidon server
 - Install [Docker CE](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/)
